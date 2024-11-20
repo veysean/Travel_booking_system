@@ -12,7 +12,7 @@ private:
     std::string Checkout;
 
 public:
-    Booking(std::string customerName, int customerId, std::string CheckIn, std::string checkOut)
+    Booking(std::string &customerName, int customerId, std::string &CheckIn, std::string &checkOut)
     {
         this->customerId = customerId;
         this->customerName = customerName;

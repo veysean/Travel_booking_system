@@ -16,6 +16,11 @@ private:
     std::vector<Booking> bookings;
 
 public:
+    Hotel(std::string &name, std::string &location)
+    {
+        this->name = name;
+        this->location = location;
+    }
 };
 
 #endif
