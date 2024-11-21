@@ -3,21 +3,22 @@
 
 #include <string>
 
+#include "Hotel.hpp"
+
 class Booking
 {
 private:
-    std::string customerName;
-    int customerId;
+    Hotel *hotels;
+    // Date checkIn and checkout
     std::string checkIn;
-    std::string Checkout;
+    std::string checkOut;
 
 public:
-    Booking(std::string &customerName, int customerId, std::string &CheckIn, std::string &checkOut)
+    Booking(std::string &checkIn, std::string &checkOut)
     {
-        this->customerId = customerId;
-        this->customerName = customerName;
         this->checkIn = checkIn;
-        this->Checkout = checkOut;
+        this->checkOut = checkOut;
+        this->hotels = nullptr;
     }
 };
 

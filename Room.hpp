@@ -6,16 +6,32 @@
 class Room
 {
 private:
-    int roomNumber;
+    // 1 mean room is available and 0 room unavailable
+    bool available;
+    // price of the room
     double price;
+    // typs of room like 1bed or 2beds
     std::string type;
 
 public:
-    Room(int roomNumber, double price, std::string &type)
+    // Constructor
+    Room(double price, std::string &type)
     {
         this->price = price;
-        this->roomNumber = roomNumber;
         this->type = type;
+        this->available = 1;
+    }
+
+    // Check for availability of room
+    bool isAvailable()
+    {
+
+        return available;
+    }
+
+    // display room info( price & type)
+    void roomDetail()
+    {
     }
 };
 
