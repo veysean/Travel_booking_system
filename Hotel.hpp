@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include<iostream>
 
 class Hotel
 {
@@ -25,7 +26,14 @@ public:
         this->location = location;
         this->hotelId = hotelId;
     }
-
+    //get the hotel name
+    std::string getHotelName(){
+        return this->name;
+    }
+    //get the hotel location
+    std::string getLocation(){
+        return this->location;
+    }
     // add room in the hotel one by one
     void addRoom(double price, std::string type)
     {
@@ -36,6 +44,12 @@ public:
     void removeRoom(int index)
     {
     }
+    
+    //display room information
+    void roomInformation(int index){
+       this->rooms[index]->roomDetail();
+    }
+
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define ROOM_HPP
 
 #include <string>
+#include<iostream>
 
 class Room
 {
@@ -25,13 +26,14 @@ public:
     // Check for availability of room
     bool isAvailable()
     {
-
         return available;
     }
 
     // display room info( price & type)
     void roomDetail()
     {
+        std::cout<<"Room type :"<<this->type<<std::endl;
+        std::cout<<"Price : "<<this->price<<std::endl;
     }
 };
 
