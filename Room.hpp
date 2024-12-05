@@ -11,22 +11,21 @@ private:
     // price of the room
     double price;
     // typs of room like 1bed or 2beds
-    std::string type;
+    std::string roomType;
 
 public:
     // Constructor
     Room(double price, std::string &type)
     {
         this->price = price;
-        this->type = type;
+        this->roomType = type;
         this->available = 1;
     }
 
-    // Check for availability of room
-    bool isAvailable()
+    // display all rooms that available
+    void isRoomAvailable()
     {
 
-        return available;
     }
 
     // display room info( price & type)
