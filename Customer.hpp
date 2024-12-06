@@ -22,17 +22,36 @@ public:
         this->bookings = nullptr;
     }
 
+    //loading booking data from file
+    void loadingBookingData()
+    {
+
+    }
+
+    //save booking data to file
+    void saveBookingData()
+    {
+        
+    }
+
     void addBooking()
     {
+        //input booking info (name....)
+        //auto generate booking ID
     }
 
-    void cancelBooking()
+    void cancelBooking(int bookingId)
+    {
+        //cancel booking by using booking id
+    }
+
+
+    //display all current bookings
+    void displayCurrentBooking()
     {
     }
 
-    void displayBooking()
-    {
-    }
+    
 };
 
 #endif
