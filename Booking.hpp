@@ -5,7 +5,7 @@
 
 #include "Hotel.hpp"
 
-class Booking 
+class Booking
 {
 private:
     Hotel *hotels;
