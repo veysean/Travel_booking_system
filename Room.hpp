@@ -37,52 +37,10 @@ public:
     // display room info( price & type)
     void roomDetail(int roomID, double price, std::string &type)
     {
-        std::cout << "Room ID: " << roomID
-                  << ", Room Type: " << roomType
-                  << ", Price: " << price << std::endl;
+        
     }
 
-    //getter
-    int getRoomID() const 
-    {
-        return roomID;
-    }
-
-    double getPrice()
-    {
-        return price;
-    }
-
-    std::string getRoomType(const std::string &newType)
-    {
-        roomType = newType;
-    }
-
-    // Static method to load room data from a file
-    static Room loadFromFile(std::ifstream &file)
-    {
-        int roomID;
-        double price;
-        std::string roomType;
-        std::string line;
-
-        // Assuming each line contains: RoomID,RoomType,Price,Available
-        if (std::getline(file, line))
-        {
-            std::istringstream iss(line);
-            std::string token;
-
-            // Parse the line
-            std::getline(iss, token, ',');
-            roomID = std::stoi(token);
-
-            std::getline(iss, token, ',');
-            roomType = token;
-
-            std::getline(iss, token, ',');
-            price = std::stod(token);
-        }
-    }
+   
 };
 
 #endif
