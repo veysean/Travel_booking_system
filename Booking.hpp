@@ -74,31 +74,6 @@ public:
         }
         return tokens;
     }
-    // Helper function to increment a date string (format: DD-MM-YYYY)
-    std::string incrementDate(const std::string &date, int days)
-    {
-        std::vector<std::string> parts = split(date, '-');
-        int day = std::stoi(parts[0]);
-        int month = std::stoi(parts[1]);
-        int year = std::stoi(parts[2]);
-
-        // Simple date increment logic (not accounting for month/year overflow)
-        day += days;
-        if (day > 30)
-        { // Simplified logic assuming all months have 30 days
-            day -= 30;
-            month += 1;
-            if (month > 12)
-            {
-                month = 1;
-                year += 1;
-            }
-        }
-        // Reconstruct the date string
-        std::ostringstream newDate;
-        newDate << (day < 10 ? "0" : "") << day << "-" << (month < 10 ? "0" : "") << month << "-" << year;
-        return newDate.str();
-    }
 
     // Helper function to validate a date string (format: DD-MM-YYYY)
     std::string isValidDateAndIncrement(const std::string &date, int days)
