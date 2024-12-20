@@ -26,23 +26,20 @@ public:
         this->hotelId = hotelId;
     }
 
-
-    //loading room data from file
+    // loading room data from file
     void loadingRoomData()
     {
-
     }
 
-    //save room data to file
+    // save room data to file
     void saveRoomData()
     {
-        
     }
 
     // add room in the hotel one by one
-    void addRoom(double price, std::string type)
+    void addRoom(int roomId, double price, std::string type)
     {
-        rooms.push_back(new Room(price, type));
+        rooms.push_back(new Room(roomId, price, type));
     }
 
     // remove room by index
@@ -50,10 +47,9 @@ public:
     {
     }
 
-    //update hotel(modify)
+    // update hotel(modify)
     void updateHotel(int hotelId)
     {
-
     }
 };
 
