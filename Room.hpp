@@ -2,36 +2,76 @@
 #define ROOM_HPP
 
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 class Room
 {
 private:
-    // 1 mean room is available and 0 room unavailable
-    bool available;
-    // price of the room
-    double price;
-    // typs of room like 1bed or 2beds
+    // Unique room ID
+    int roomID;
+    // types of room like 1bed or 2beds
     std::string roomType;
+    //price of the room
+    double price;
 
 public:
     // Constructor
-    Room(double price, std::string &type)
-    {
+    Room(int roomID, double price, std::string &type)
+    {   this->roomID = roomID;
         this->price = price;
         this->roomType = type;
-        this->available = 1;
     }
+    
+    // Default constructor
+    Room() : roomID(0), price(0.0), roomType("") {}
 
-    // display all rooms that available
-    void isRoomAvailable()
+    // Display room info (price & type)
+    void displayRoomDetails()
     {
-
+        std::cout << "Room ID: " << roomID << ", Price: $" << price << ", Room Type: " << roomType <<std::endl;
     }
 
-    // display room info( price & type)
-    void roomDetail()
+    // display room info( price & type) read from file
+    void roomDetail(const std::string &filename)
     {
+        std::ifstream file(filename);
+
+        if (!file.is_open())
+        {
+            std::cerr << "Error: Unable to open file " << filename << "\n";
+            return;
+        }
+
+        std::string line;
+        while (std::getline(file, line))
+        {
+            std::istringstream iss(line);
+            int id;
+            std::string type;
+            double cost;
+
+            if (iss >> id >> type >> cost)
+            {
+                roomID = id;
+                roomType = type;
+                price = cost;
+
+                // Display the room details
+                displayRoomDetails();
+            }
+            else
+            {
+                std::cerr << "Error: Invalid data format in file." << "\n";
+            }
+        }
+
+        file.close();
+
     }
+
+   
 };
 
 #endif
