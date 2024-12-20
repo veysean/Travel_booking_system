@@ -20,22 +20,12 @@ public:
         this->gender = gender;
         this->customerId = customerId;
         this->bookings = nullptr;
-    }
+    }       
 
     //loading booking data from file
     void loadingBookingData()
     {
 
-    }
-
-    //save booking data to file
-    void saveBookingData()
-    {
-        
-    }
-
-    void addBooking()
-    {
         //input booking info (name....)
         //auto generate booking ID
     }
@@ -49,6 +39,8 @@ public:
     //display all current bookings
     void displayCurrentBooking()
     {
+        
+
     }
 
     

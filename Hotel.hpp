@@ -1,5 +1,5 @@
 #ifndef HOTEL_HPP
-#define HOTELL_HPP
+#define HOTEL_HPP
 
 #include "Room.hpp"
 
