@@ -1,10 +1,13 @@
 #ifndef HOTEL_HPP
-#define HOTELL_HPP
+#define HOTEL_HPP
 
 #include "Room.hpp"
-
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
+#include <memory> // For std::unique_ptr
 
 class Hotel
 {
@@ -16,61 +19,107 @@ private:
     // hotel ID
     int hotelId;
     // room in hotel from room.hpp
-    std::vector<Room *> rooms;
+    std::vector<std::unique_ptr<Room>> rooms;
 
 public:
-    Hotel(std::string &name, std::string &location, int hotelId)
+    Hotel(int& hotelId,const std::string& name,const std::string& location)
     {
+        this->hotelId = hotelId;
         this->name = name;
         this->location = location;
-        this->hotelId = hotelId;
     }
-
-
+    
     //loading room data from file
-    void loadingRoomData()
+    void loadingRoomData(int hotelId)
     {
+    std::string filename ="ID"+ std::to_string(hotelId)+"RoomList.txt";
+       std::ifstream file(filename);//open the file as read mode
 
+       if(!file.is_open()){
+        std::cerr<<"fail to load data!"<<filename<<std::endl;
+        return;
+       }
+
+       std::string line;//line to store data form file line by line
+       while(std::getline(file,line)){
+        std::istringstream linestream(line);
+
+        std::string roomId,roomPrice,roomType;
+        if(std::getline(linestream,roomId,',') && 
+            std::getline(linestream,roomPrice,',') && 
+            std::getline(linestream,roomType)){
+
+            int id = std::stoi(roomId);
+            double price = std:: stod(roomPrice);
+           // Use std::make_unique to create unique_ptr and push it into the vector
+            rooms.push_back(std::make_unique<Room>(id, roomType, price));
+         }
+       
+       }
+    file.close();
     }
 
     //save room data to file
-    void saveRoomData()
+    void saveRoomData(int hotelId)
     {
+        std::string filename ="ID"+ std::to_string(hotelId)+"RoomList.txt";
+        std::ofstream file(filename);//open the file as write mode
+
+        if(!file.is_open()){
+            std::cerr<<"Fail to save data!"<<std::endl;
+            return;
+        }
+        for(const auto& room : rooms){
+           file<< room->getId()<<","<<room->getType()<<","<<room->getPrice()<<std::endl;
+        }
+        file.close();
         
     }
 
     // add room in the hotel one by one
-    void addRoom(double price, std::string type)
+    void addRoom(int roomId, std::string& type,double price)
     {
-        rooms.push_back(new Room(price, type));
+        rooms.push_back(std::make_unique<Room>(roomId, type, price));
+        
     }
 
     // remove room by index
-    void removeRoom(vector<Room>& rooms, int index)
+    void removeRoom(int index)
     {
          if(index < 0 || index > rooms.size()){
-            cout<<"Invalid room index! fail to remove."<<endl;
+            std::cout<<"Invalid room index! fail to remove."<<std::endl;
             return;
         }
         rooms.erase(rooms.begin() + index);
-        cout<<"Remove Successful!"<<endl;
+        std::cout<<"Remove Successful!"<<std::endl;
     }
-
-    //update hotel(modify)
-    void updateHotel(vector<Hotel>& hotels,int hotelId,const string& newName,const std::string& newLocation)
-    {
-        for(auto& hotel : hotels){
-            if(hotel.hotelId == hotelId){
-                //update detail
-                hotel.name = newName;
-                hotel.location = newLocation;
-                cout<<"Update Successful!"<<endl;
-                return;
-            }
+    //display all the room information in the hotel
+    void displayAllRoom(){
+        if(rooms.empty()){
+            std::cout<<"No room data."<<std::endl;
+            return;
         }
-        cout<<"Hotel with ID : "<<hotelId<<" not found"<<endl;
+        std::cout<<"----------Room List----------"<<std::endl;
+        for(const auto& room : rooms){
+            room->roomDetail();
+        }
 
     }
+    //return hotel name
+    std::string getHotelName() const{//use const to ensure that the method Does not modify the object
+        return name;
+    }
+    //return hotel location 
+    std::string getHotelLocation() const{
+        return location;
+    }
+    //return hotel id
+    int getHotelId() const{
+        return hotelId;
+    }
+
+    
+
 };
 
 #endif
