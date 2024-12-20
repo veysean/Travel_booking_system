@@ -43,13 +43,30 @@ public:
     }
 
     // remove room by index
-    void removeRoom(int index)
+    void removeRoom(vector<Room>& rooms, int index)
     {
+         if(index < 0 || index > rooms.size()){
+            cout<<"Invalid room index! fail to remove."<<endl;
+            return;
+        }
+        rooms.erase(rooms.begin() + index);
+        cout<<"Remove Successful!"<<endl;
     }
 
-    // update hotel(modify)
-    void updateHotel(int hotelId)
+    //update hotel(modify)
+    void updateHotel(vector<Hotel>& hotels,int hotelId,const string& newName,const std::string& newLocation)
     {
+        for(auto& hotel : hotels){
+            if(hotel.hotelId == hotelId){
+                //update detail
+                hotel.name = newName;
+                hotel.location = newLocation;
+                cout<<"Update Successful!"<<endl;
+                return;
+            }
+        }
+        cout<<"Hotel with ID : "<<hotelId<<" not found"<<endl;
+
     }
 };
 
