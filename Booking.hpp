@@ -30,7 +30,6 @@ public:
     }
 
     // loading data hotel from file or // Function to read hotels from a file
-    
 
     // select hotel in order to booking by input Hotel ID
     int selectHotel(int hotelId)
@@ -176,7 +175,7 @@ public:
             std::string fileCheckIn = parts[4];
             std::string fileCheckOut = parts[5];
 
-            std::string requestedCheckOut = incrementDate(checkIn, duration);
+            std::string requestedCheckOut = isValidDateAndIncrement(checkIn, duration);
 
             if (fileRoomType == roomType && (checkIn >= fileCheckOut || requestedCheckOut <= fileCheckIn))
             {
