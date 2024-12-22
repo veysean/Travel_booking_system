@@ -195,6 +195,23 @@ public:
             std::cout << "Room type " << roomType << " is not available." << std::endl;
         }
     }
+
+    int getBookingId()
+    {
+        return bookingId;
+    }
+    std::string getCheckIn()
+    {
+        return checkIn;
+    }
+    std::string getCheckOut()
+    {
+        return checkOut;
+    }
+    std::vector<Hotel> getHotel()
+    {
+        return hotels;
+    }
 };
 
 #endif
