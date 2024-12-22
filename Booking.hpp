@@ -10,19 +10,21 @@ using namespace std;
 class Booking
 {
 private:
+    int bookingId;
     Hotel *hotels;
     // Date checkIn and checkout
     std::string checkIn;
     std::string checkOut;
     int duration;
-    int bookingId;
 
 public:
-    Booking(std::string &checkIn, std::string &checkOut)
+    Booking(int bookingId, std::string &checkIn, std::string &checkOut)
     {
+        this->bookingId = bookingId;
         this->checkIn = checkIn;
         this->checkOut = checkOut;
-        this->hotels = nullptr;
+        hotels = nullptr;
+
     }
 
     //loading data hotel from file
@@ -43,13 +45,29 @@ public:
     }
 
     // check if the selected room whether available or not
-    void isAvalaible(std::string checkIn, int duration, std::string roomType)
+    static void isAvalaible()
     {
 
         // show only available room based on checkin and duration
 
         // to increase the date(string)split string then convert to integer to increase, lastly concate string
     }
+    static void displayBookingDetails()
+    {
+
+    }
+    int getBookingId(){
+        return bookingId;
+    }
+    std::string getCheckIn(){
+        return checkIn;
+    }
+    std::string getCheckOut(){
+        return checkOut;
+    }
+    Hotel* getHotel(){
+        return hotels;
+    }
 };
 
-#endif
+#endif;

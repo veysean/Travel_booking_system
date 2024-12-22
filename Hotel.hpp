@@ -71,6 +71,12 @@ public:
         cout<<"Hotel with ID : "<<hotelId<<" not found"<<endl;
 
     }
+    int getHotelId(){
+        return hotelId;
+    }
+    std::string getHotelName(){
+        return name;
+    }
 };
 
 #endif
