@@ -145,7 +145,7 @@ public:
     }
 
     // check if the selected room whether available or not
-    bool isAvalaible(int hotelId, std::string checkIn, int duration, std::string roomType)
+    bool isAvailable(int hotelId, const std::string &checkIn, int duration, const std::vector<std::string> &roomTypes)
     {
         try
         {
@@ -157,16 +157,14 @@ public:
             return false;
         }
 
-        // show only available room based on checkin and duration
-        // to increase the date(string)split string then convert to integer to increase, lastly concate string
-        std::ifstream file("ID" + to_string(selectHotel()) + "HotelBooking.txt");
+        std::ifstream file("ID" + std::to_string(selectHotel()) + "HotelBooking.txt");
         std::string line;
-        bool available = false;
+        std::vector<std::string> availableRoomTypes;
 
         if (!file.is_open())
         {
             std::cerr << "Unable to open file" << std::endl;
-            return;
+            return false;
         }
 
         while (std::getline(file, line))
@@ -178,22 +176,32 @@ public:
 
             std::string requestedCheckOut = isValidDateAndIncrement(checkIn, duration);
 
-            if (fileRoomType == roomType && (checkIn >= fileCheckOut || requestedCheckOut <= fileCheckIn))
+            for (const auto &roomType : roomTypes)
             {
-                available = true;
-                break;
+                if (fileRoomType == roomType && (checkIn >= fileCheckOut || requestedCheckOut <= fileCheckIn))
+                {
+                    availableRoomTypes.push_back(roomType);
+                    break;
+                }
             }
         }
 
         file.close();
 
-        if (available)
+        if (!availableRoomTypes.empty())
         {
-            std::cout << "Room type " << roomType << " is available." << std::endl;
+            std::cout << "Available room types: ";
+            for (const auto &roomType : availableRoomTypes)
+            {
+                std::cout << roomType << " ";
+            }
+            std::cout << std::endl;
+            return true;
         }
         else
         {
-            std::cout << "Room type " << roomType << " is not available." << std::endl;
+            std::cout << "No room types are available." << std::endl;
+            return false;
         }
     }
 
