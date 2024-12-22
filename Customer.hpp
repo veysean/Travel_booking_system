@@ -154,7 +154,7 @@ public:
         std::cin >> roomType;
         
         //call isAvailble to show the number of available rooms
-        Booking::isAvalaible();
+        bookings.isAvalaible();
         
         std::cout << "Enter numbers of the rooms:" ;
         std::cin >> numOfRoom;
