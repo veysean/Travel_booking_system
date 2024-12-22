@@ -7,6 +7,7 @@
 #include <sstream>
 #include "Booking.hpp"
 
+
 class Customer
 {
 private:
@@ -178,13 +179,17 @@ public:
         // call isAvailble to show the number of available rooms
         for (auto &booking : bookings)
         {
-            booking.isAvalaible(hotelId, checkIn, duration, roomType);
+            booking.isAvalaible(hotelId, checkIn, duration, roomType); // Ensure this is called correctly
         }
 
         std::cout << "Enter numbers of the rooms:";
         std::cin >> numOfRoom;
         std::string checkOut = calculateCheckOutDate(checkIn, duration);
+
+        // Create the new booking
+        bookings.emplace_back(checkIn, checkOut, duration, bookingId);  // Ensure this is done correctly
     }
+
 
     void cancelBooking(int bookingId)
     {
@@ -212,8 +217,8 @@ public:
                 for (auto &booking : bookings)
                 {
                     file << booking.getBookingId() << ","
-                         << booking.getHotel()->getHotelId() << ","
-                         << booking.getHotel()->getHotelName() << ","
+                         << booking.getHotelId()<< ","
+                         << booking.getHotelName()<< ","
                          << booking.getCheckIn() << ","
                          << booking.getCheckOut() << "," << std::endl;
                 }
@@ -231,8 +236,8 @@ public:
                 for (auto &booking : bookings)
                 {
                     hotelFile << booking.getBookingId() << ","
-                              << booking.getHotel()->getHotelId() << ","
-                              << booking.getHotel()->getHotelName() << ","
+                              << booking.getHotelId()<< ","
+                              << booking.getHotelName()<< ","
                               << booking.getCheckIn() << ","
                               << booking.getCheckOut() << std::endl;
                 }
@@ -264,8 +269,8 @@ public:
         for (auto &booking : bookings)
         {
             std::cout << "Booking ID: " << booking.getBookingId() << std::endl
-                      << "Hotel ID: " << booking.getHotel()->getHotelId() << std::endl
-                      << "Hotel Name: " << booking.getHotel()->getHotelName() << std::endl
+                      << "Hotel ID: " << booking.getHotelId() << std::endl
+                      << "Hotel Name: " << booking.getHotelName() << std::endl
                       << "Check-in Date: " << booking.getCheckIn() << std::endl
                       << "Check-out Date: " << booking.getCheckOut() << std::endl
                       << "-------------------------------------------------" << std::endl;
@@ -284,7 +289,7 @@ public:
     {
         return this->customerName;
     }
-    std::string getGender()
+    std::string getCustomerGender()
     {
         return this->gender;
     }

@@ -23,39 +23,40 @@ private:
     int bookingId;
 
 public:
-    Booking(std::string &checkIn, std::string &checkOut)
-    {
-        this->checkIn = checkIn;
-        this->checkOut = checkOut;
-    }
+    Booking(const std::string &checkIn, const std::string &checkOut, int duration, int bookingId)
+        : checkIn(checkIn), checkOut(checkOut), duration(duration), bookingId(bookingId) {}
 
     // loading data hotel from file or // Function to read hotels from a file
+    void loadHotelsFromFile()
+    {
+        std::ifstream file("hotelInfo.txt");
+        if (!file.is_open())
+        {
+            std::cerr << "Unable to open hotel file." << std::endl;
+            return;
+        }
 
-    // select hotel in order to booking by input Hotel ID
-    int selectHotel(int hotelId)
+        std::string line;
+        while (std::getline(file, line))
+        {
+            std::stringstream ss(line);
+            int id;
+            std::string name;
+            ss >> id;
+            ss.ignore();
+            std::getline(ss, name, ',');
+            hotels.emplace_back(id, name);
+        }
+
+        file.close();
+    }
+
+    int selectHotel()
     {
         vector<Hotel> hotels;
         string line;
         int hotelId;
-        std::fstream fileHotel("hotelInfo.txt");
-        if (!fileHotel.is_open())
-        {
-            std::cerr << "Unable to open file" << std::endl;
-            return;
-        }
-        while (std::getline(fileHotel, line))
-        {
-            std::vector<std::string> parts = split(line, ',');
-            int id = std::stoi(parts[0]);
-            std::string name = parts[1];
-            std::string location = parts[2];
-            if (id == hotelId)
-            {
-                hotels.emplace_back(name, location, id);
-                break;
-            }
-        }
-        fileHotel.close();
+        loadHotelsFromFile();
         return hotelId;
     }
     // Function to check if a hotel meets the criteria
@@ -158,7 +159,7 @@ public:
 
         // show only available room based on checkin and duration
         // to increase the date(string)split string then convert to integer to increase, lastly concate string
-        std::ifstream file("ID" + to_string(selectHotel(hotelId)) + "HotelBooking.txt");
+        std::ifstream file("ID" + to_string(selectHotel()) + "HotelBooking.txt");
         std::string line;
         bool available = false;
 
@@ -196,21 +197,25 @@ public:
         }
     }
 
-    int getBookingId()
+    int getBookingId() const { return bookingId; }
+    std::string getCheckIn() const { return checkIn; }
+    std::string getCheckOut() const { return checkOut; }
+    int getHotelId() const
     {
-        return bookingId;
+        if (hotels.empty())
+        {
+            return -1; // Return a default value if the hotels vector is empty
+        }
+        return hotels[0].getHotelId(); // Access the first hotel in the vector
     }
-    std::string getCheckIn()
+
+    std::string getHotelName() const
     {
-        return checkIn;
-    }
-    std::string getCheckOut()
-    {
-        return checkOut;
-    }
-    std::vector<Hotel> getHotel()
-    {
-        return hotels;
+        if (hotels.empty())
+        {
+            return ""; // Return a default value if the hotels vector is empty
+        }
+        return hotels[0].getHotelName(); // Access the first hotel in the vector
     }
 };
 
