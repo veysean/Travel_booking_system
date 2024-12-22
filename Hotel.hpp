@@ -46,8 +46,8 @@ public:
 
         std::string roomId,roomPrice,roomType;
         if(std::getline(linestream,roomId,',') && 
-            std::getline(linestream,roomPrice,',') && 
-            std::getline(linestream,roomType)){
+            std::getline(linestream,roomType,',') && 
+            std::getline(linestream,roomPrice)){
 
             int id = std::stoi(roomId);
             double price = std:: stod(roomPrice);
@@ -94,12 +94,13 @@ public:
         std::cout<<"Remove Successful!"<<std::endl;
     }
     //display all the room information in the hotel
-    void displayAllRoom(){
+    void displayAllRoom(int hotelID){
+        loadingRoomData(hotelID);
         if(rooms.empty()){
             std::cout<<"No room data."<<std::endl;
             return;
         }
-        std::cout<<"----------Room List----------"<<std::endl;
+        std::cout<<"----------------Room List---------------"<<std::endl;
         for(const auto& room : rooms){
             room->roomDetail();
         }
