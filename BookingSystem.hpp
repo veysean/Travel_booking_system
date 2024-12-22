@@ -176,14 +176,20 @@ public:
         hotels.push_back(std::make_unique<Hotel>(id, name, location));
     }
 
-    //remove hotel from the system
-    // void removeHotel(int hotelId)
-    // {
+    //display hotel room
+    void displayHotelRoom(int hotelID){
+        
+        for (const auto& hotel : hotels) {
+        if (hotel->getHotelId() == hotelID) {
+            hotel->displayAllRoom(hotelID);
+            return;
+        }
+    }
+    std::cout << "Hotel not found!"<<std::endl;
+    }
 
-
-    // }
     //display all information of the hotel
-    void displayInfo(int index){
+    void displayHotelInfo(int index){
         if(index >= 0 && index < hotels.size()){
         std::cout<<"Hotel name: "<<hotels[index]->getHotelName()<<std::endl;
         std::cout<<"Hotel location: "<<hotels[index]->getHotelLocation()<<std::endl;
@@ -198,6 +204,7 @@ public:
         }
             std::cout<<"----------List of all hotel----------"<<std::endl;
         for(const auto& hotel : hotels){
+            std::cout<<"Hotel ID: "<<hotel->getHotelId()<<std::endl;
             std::cout<<"Hotel name: "<<hotel->getHotelName()<<std::endl;
             std::cout<<"Hotel location: "<<hotel->getHotelLocation()<<std::endl;  
             std::cout<<"-------------------------------------"<<std::endl;
@@ -213,7 +220,9 @@ public:
 
         for (const auto& hotel : hotels){
             std::string thisLocation = toLowerCase(hotel->getHotelLocation());
+           
             if(inputLocation == thisLocation){
+                std::cout<<"Hotel ID: "<<hotel->getHotelId()<<std::endl;
                 std::cout<<"Hotel name: "<<hotel->getHotelName()<<std::endl;
                 std::cout<<"Hotel location: "<<hotel->getHotelLocation()<<std::endl;
                 std::cout<<"-------------------------------------"<<std::endl;
@@ -235,8 +244,12 @@ public:
         std::string inputName = toLowerCase(name);
 
         for (const auto& hotel : hotels){
-            std::string thisName = toLowerCase(hotel->getHotelLocation());
+            std::string thisName = toLowerCase(hotel->getHotelName());
+            
             if(inputName == thisName){
+                std::cout<<"Hotel with name: "<<name<<std::endl;
+                std::cout<<"-------------------------------------"<<std::endl;
+                std::cout<<"Hotel ID: "<<hotel->getHotelId()<<std::endl;
                 std::cout<<"Hotel name: "<<hotel->getHotelName()<<std::endl;
                 std::cout<<"Hotel location: "<<hotel->getHotelLocation()<<std::endl;
                 std::cout<<"-------------------------------------"<<std::endl;
