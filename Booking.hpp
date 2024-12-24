@@ -18,10 +18,11 @@ private:
     std::string checkOut;
     int bookingId;
     int hotelId;
+    std::string roomType;
     std::string hotelName;
 
 public:
-    Booking(int bookingId, int hotelId, const std::string &hotelName, const std::string &checkIn, const std::string &checkOut)
+    Booking(int bookingId, int hotelId, const std::string &hotelName, const std::string roomType, const std::string &checkIn, const std::string &checkOut)
         : bookingId(bookingId), hotelId(hotelId), hotelName(hotelName), checkIn(checkIn), checkOut(checkOut) {}
 
     std::vector<std::string> split(const std::string &str, char delimiter)
@@ -95,7 +96,7 @@ public:
             return;
         }
 
-        file << bookingId << "," << hotelId << "," << hotelName << "," << checkIn << "," << checkOut << "\n";
+        file << bookingId << "," << hotelId << "," << hotelName << "," << roomType << "," << checkIn << "," << checkOut << "\n";
         file.close();
     }
 
@@ -104,6 +105,7 @@ public:
     std::string getCheckOut() const { return checkOut; }
     int getHotelId() const { return hotelId; }
     std::string getHotelName() const { return hotelName; }
+    std::string getRoomType() const { return roomType; }
 };
 
 #endif

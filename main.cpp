@@ -41,7 +41,7 @@ int main()
 
         case 2:
             // Login with an existing account
-            customerBooking.logIn();
+            if(customerBooking.logIn())
             { // Assuming logIn returns a success flag
                 std::cout << "Welcome to Hotel Booking System!" << std::endl;
 

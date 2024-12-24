@@ -47,17 +47,18 @@ public:
         {
             std::stringstream ss(line);
             int bookingId, hotelId;
-            std::string hotelName, checkIn, checkOut;
+            std::string hotelName, roomType, checkIn, checkOut;
 
             ss >> bookingId;
             ss.ignore();
             ss >> hotelId;
             ss.ignore();
             std::getline(ss, hotelName, ',');
+            std::getline(ss, roomType, ',');
             std::getline(ss, checkIn, ',');
             std::getline(ss, checkOut, ',');
 
-            bookings.emplace_back(bookingId, hotelId, hotelName, checkIn, checkOut);
+            bookings.emplace_back(bookingId, hotelId, hotelName, roomType, checkIn, checkOut);
         }
 
         file.close();
@@ -74,7 +75,7 @@ public:
         std::cin >> checkIn;
         std::cout << "Enter duration (in days): ";
         std::cin >> duration;
-        std::cout << "Enter room type (e.g., Single, Double): ";
+        std::cout << "Enter room type (e.g., 1bed,2beds): ";
         std::cin >> roomType;
 
         bool roomAvailable = false;
@@ -95,13 +96,13 @@ public:
             std::string checkOut = DateUtils::calculateCheckOutDate(checkIn, duration);
 
             int bookingId = bookings.size() + 1;
-            Booking newBooking(bookingId, hotelId, "Hotel Name", checkIn, checkOut); // Replace "Hotel Name" with actual hotel name
+            Booking newBooking(bookingId, hotelId, "Hotel Name", roomType, checkIn, checkOut); // Replace "Hotel Name" with actual hotel name
             bookings.push_back(std::move(newBooking));
 
             std::ofstream file("ID" + std::to_string(customerId) + "UserBooking.txt", std::ios::app);
             if (file.is_open())
             {
-                file << bookingId << "," << hotelId << "," << "hotel Name" << "," << checkIn << "," << checkOut << "\n"; // Replace "Hotel Name" with actual hotel name
+                file << bookingId << "," << hotelId << "," << "hotel Name" << "," << roomType << "," << checkIn << "," << checkOut << "\n"; // Replace "Hotel Name" with actual hotel name
                 file.close();
             }
             else
@@ -117,7 +118,6 @@ public:
             std::cout << "No rooms available for the selected dates and room type." << std::endl;
         }
     }
-
 
     void cancelBooking(int bookingId)
     {
@@ -145,6 +145,7 @@ public:
                     file << booking.getBookingId() << ","
                          << booking.getHotelId() << ","
                          << booking.getHotelName() << ","
+                         << booking.getRoomType() << ","
                          << booking.getCheckIn() << ","
                          << booking.getCheckOut() << "\n";
                 }
@@ -162,6 +163,7 @@ public:
                     hotelFile << booking.getBookingId() << ","
                               << booking.getHotelId() << ","
                               << booking.getHotelName() << ","
+                              << booking.getRoomType() << ","
                               << booking.getCheckIn() << ","
                               << booking.getCheckOut() << "\n";
                 }
@@ -193,6 +195,7 @@ public:
             std::cout << "Booking ID: " << booking.getBookingId() << std::endl
                       << "Hotel ID: " << booking.getHotelId() << std::endl
                       << "Hotel Name: " << booking.getHotelName() << std::endl
+                      << "Room Type: " << booking.getRoomType() << std::endl
                       << "Check-in Date: " << booking.getCheckIn() << std::endl
                       << "Check-out Date: " << booking.getCheckOut() << std::endl
                       << "-------------------------------------------------" << std::endl;
@@ -203,7 +206,7 @@ public:
     std::string getCustomerEmail() const { return customerEmail; }
     std::string getCustomerName() const { return customerName; }
     std::string getCustomerGender() const { return gender; }
-    std::string getCustomerPassword() const { return customerPassword; }
+    std::string getCustomerPassword() { return customerPassword; }
 };
 
 #endif

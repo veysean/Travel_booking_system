@@ -208,7 +208,7 @@ public:
     }
 
     // login to the system
-    void logIn()
+    bool logIn()
     {
         std::string gmail, password;
         std::cout << "Input Gmail: ";
@@ -223,6 +223,7 @@ public:
                 if (user->getCustomerPassword() == password)
                 {
                     std::cout << "Login successfull..." << std::endl;
+                    return true;
                 }
             }
         }
