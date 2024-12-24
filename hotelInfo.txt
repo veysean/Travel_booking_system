@@ -1,0 +1,4 @@
+1,Angkor,kompot
+2,Sok Kha,Phnom Penh
+3,Krovan,Pursat
+4,Riverside,Siem Reap
