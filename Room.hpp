@@ -5,38 +5,27 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <fstream>
-#include <sstream>
 
 class Room
 {
 private:
-    // Unique room ID
     int roomID;
-    // types of room like 1bed or 2beds
     std::string roomType;
-    // price of the room
     double price;
 
 public:
-    // Constructor
-    Room(int roomID, double price, std::string &type)
+    Room(int roomID, double price, const std::string &type)
     {
         this->roomID = roomID;
         this->price = price;
         this->roomType = type;
     }
 
-    // Default constructor
-    Room() : roomID(0), price(0.0), roomType("") {}
-
-    // Display room info (price & type)
-    void displayRoomDetails()
+    void displayRoomDetails() const
     {
         std::cout << "Room ID: " << roomID << ", Price: $" << price << ", Room Type: " << roomType << std::endl;
     }
 
-    // display room info( price & type) read from file
     void roomDetail(const std::string &filename)
     {
         std::ifstream file(filename);
@@ -61,7 +50,6 @@ public:
                 roomType = type;
                 price = cost;
 
-                // Display the room details
                 displayRoomDetails();
             }
             else
@@ -73,15 +61,17 @@ public:
         file.close();
     }
 
-    int getId()
+    int getId() const
     {
         return roomID;
     }
-    std::string getType()
+
+    std::string getType() const
     {
         return roomType;
     }
-    double getPrice()
+
+    double getPrice() const
     {
         return price;
     }

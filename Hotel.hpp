@@ -12,59 +12,52 @@
 class Hotel
 {
 private:
-    // hotel name
     std::string name;
-    // hotel location
     std::string location;
-    // hotel ID
     int hotelId;
-    // room in hotel from room.hpp
     std::vector<std::unique_ptr<Room>> rooms;
 
 public:
-    Hotel(int &hotelId, const std::string &name, const std::string &location)
+    Hotel(int hotelId, const std::string &name, const std::string &location)
     {
         this->hotelId = hotelId;
         this->name = name;
         this->location = location;
     }
 
-    // loading room data from file
     void loadingRoomData(int hotelId)
     {
+        rooms.clear(); // Clear existing rooms before loading new data
         std::string filename = "ID" + std::to_string(hotelId) + "RoomList.txt";
-        std::ifstream file(filename); // open the file as read mode
+        std::ifstream file(filename);
 
         if (!file.is_open())
         {
-            std::cerr << "fail to load data!" << filename << std::endl;
+            std::cerr << "Fail to load data: " << filename << std::endl;
             return;
         }
 
-        std::string line; // line to store data form file line by line
+        std::string line;
         while (std::getline(file, line))
         {
             std::istringstream linestream(line);
-
-        std::string roomId,roomPrice,roomType;
-        if(std::getline(linestream,roomId,',') && 
-            std::getline(linestream,roomType,',') && 
-            std::getline(linestream,roomPrice)){
-
+            std::string roomId, roomPrice, roomType;
+            if (std::getline(linestream, roomId, ',') &&
+                std::getline(linestream, roomType, ',') &&
+                std::getline(linestream, roomPrice))
+            {
                 int id = std::stoi(roomId);
                 double price = std::stod(roomPrice);
-                // Use std::make_unique to create unique_ptr and push it into the vector
-                rooms.push_back(std::make_unique<Room>(id, roomType, price));
+                rooms.push_back(std::make_unique<Room>(id, price, roomType));
             }
         }
         file.close();
     }
 
-    // save room data to file
     void saveRoomData(int hotelId)
     {
         std::string filename = "ID" + std::to_string(hotelId) + "RoomList.txt";
-        std::ofstream file(filename); // open the file as write mode
+        std::ofstream file(filename);
 
         if (!file.is_open())
         {
@@ -78,47 +71,46 @@ public:
         file.close();
     }
 
-    // add room in the hotel one by one
-    void addRoom(int roomId, std::string &type, double price)
+    void addRoom(int roomId, double price, const std::string &type)
     {
-        rooms.push_back(std::make_unique<Room>(roomId, type, price));
+        rooms.push_back(std::make_unique<Room>(roomId, price, type));
     }
 
-    // remove room by index
     void removeRoom(int index)
     {
-        if (index < 0 || index > rooms.size())
+        if (index < 0 || index >= rooms.size())
         {
-            std::cout << "Invalid room index! fail to remove." << std::endl;
+            std::cout << "Invalid room index! Fail to remove." << std::endl;
             return;
         }
         rooms.erase(rooms.begin() + index);
         std::cout << "Remove Successful!" << std::endl;
     }
-    //display all the room information in the hotel
-    void displayAllRoom(int hotelID){
-        loadingRoomData(hotelID);
-        if(rooms.empty()){
-            std::cout<<"No room data."<<std::endl;
+
+    void displayAllRoom()
+    {
+        if (rooms.empty())
+        {
+            std::cout << "No room data." << std::endl;
             return;
         }
         std::cout << "----------Room List----------" << std::endl;
         for (const auto &room : rooms)
         {
-            room->roomDetail("ID" + std::to_string(hotelId) + "RoomList.txt");
+            room->displayRoomDetails();
         }
     }
-    // return hotel name
+
     std::string getHotelName() const
-    { // use const to ensure that the method Does not modify the object
+    {
         return name;
     }
-    // return hotel location
+
     std::string getHotelLocation() const
     {
         return location;
     }
-    // return hotel id
+
     int getHotelId() const
     {
         return hotelId;

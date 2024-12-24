@@ -5,8 +5,9 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include "Booking.hpp"
-
+#include "DateUtils.hpp"
 
 class Customer
 {
@@ -18,103 +19,26 @@ private:
     std::string customerPassword;
     std::vector<Booking> bookings;
 
-    bool isLeapYear(int year)
-    {
-        return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
-    }
-    // function to check days and months
-    int daysInMonth(int month, int year)
-    {
-        switch (month)
-        {
-        case 1:
-        case 3:
-        case 5:
-        case 7:
-        case 8:
-        case 10:
-        case 12:
-            return 31;
-        case 4:
-        case 6:
-        case 9:
-        case 11:
-            return 30;
-        case 2:
-            return isLeapYear(year) ? 29 : 28;
-        default:
-            return 0;
-        }
-    }
-    // split date to day, month, year
-    void splitdate(std::string &checkIn, std::string &day, std::string &month, std::string &year)
-    {
-        std::stringstream ss(checkIn);
-
-        std::getline(ss, day, '-');
-        std::getline(ss, month, '-');
-        std::getline(ss, year);
-    }
-    // check check-in date
-    bool checkCheckIn(std::string &checkIn)
-    {
-        std::string day, month, year;
-        splitdate(checkIn, day, month, year);
-        int checkInDay = stoi(day);
-        int checkInMonth = stoi(month);
-        int checkInYear = stoi(year);
-        if (checkInDay > daysInMonth(checkInMonth, checkInYear))
-        {
-            return false;
-        }
-        if (checkInMonth > 12 || checkInMonth <= 0)
-        {
-            return false;
-        }
-        return true;
-    }
-    // calculate check-out date with stay duration
-    std::string calculateCheckOutDate(std::string &checkIn, int duration)
-    {
-        std::string day;
-        std::string month;
-        std::string year;
-        splitdate(checkIn, day, month, year);
-        int checkOutDay = stoi(day) + duration - 1;
-        int checkOutMonth = stoi(month);
-        int checkOutYear = stoi(year);
-        while (checkOutDay > daysInMonth(checkOutMonth, checkOutYear))
-        {
-            checkOutDay -= daysInMonth(checkOutMonth, checkOutYear);
-            checkOutMonth++;
-            if (checkOutMonth > 12)
-            {
-                checkOutMonth = 1;
-                checkOutYear++;
-            }
-        }
-        return (checkOutDay < 10 ? "0" : "") + std::to_string(checkOutDay) + "-" +
-               (checkOutMonth < 10 ? "0" : "") + std::to_string(checkOutMonth) + "-" +
-               std::to_string(checkOutYear);
-    }
-
 public:
-    Customer(int customerId, std::string cutomerEmail, std::string customerName, std::string gender, std::string customerPassword)
-    {
-        this->customerId = customerId;
-        this->customerEmail = customerEmail;
-        this->customerName = customerName;
-        this->gender = gender;
-        this->customerPassword = customerPassword;
-    }
-    // read file and store in vector
+    Customer(int customerId, const std::string &customerEmail, const std::string &customerName, const std::string &gender, const std::string &customerPassword)
+        : customerId(customerId), customerEmail(customerEmail), customerName(customerName), gender(gender), customerPassword(customerPassword) {}
+
+    // Read file and store in vector (File Customer booking)
     void loadBookingsFromFile()
     {
-        int hotelId;
-        std::ifstream file("ID" + std::to_string(customerId) + "UserBooking.txt");
+        std::string filename = "ID" + std::to_string(customerId) + "UserBooking.txt";
+        std::ifstream file(filename);
+
         if (!file.is_open())
         {
-            std::cout << "Unable opening booking file.\n";
+            std::ofstream newFile(filename);
+            if (!newFile.is_open())
+            {
+                std::cerr << "Unable to create file: " << filename << std::endl;
+                return;
+            }
+            std::cout << "File created: " << filename << std::endl;
+            newFile.close();
             return;
         }
 
@@ -125,16 +49,14 @@ public:
             int bookingId, hotelId;
             std::string hotelName, checkIn, checkOut;
 
-            // Read data from the file
             ss >> bookingId;
-            ss.ignore(); // Skip comma
+            ss.ignore();
             ss >> hotelId;
             ss.ignore();
             std::getline(ss, hotelName, ',');
             std::getline(ss, checkIn, ',');
             std::getline(ss, checkOut, ',');
 
-            // Directly construct a Booking object in the vector using emplace_back
             bookings.emplace_back(bookingId, hotelId, hotelName, checkIn, checkOut);
         }
 
@@ -143,106 +65,106 @@ public:
 
     void addBooking(int hotelId)
     {
-        // user input location and and choose hotel and input checkin and type of bed so the program will show the number of available room
-
         std::string checkIn;
         int duration;
         std::string roomType;
         int numOfRoom;
-        int bookingId = bookings.size() + 1;
-        std::string day, month, year;
 
-        // user inputs check-in date
-        bool validDate = false;
-        do
+        std::cout << "Enter check-in date (DD-MM-YYYY): ";
+        std::cin >> checkIn;
+        std::cout << "Enter duration (in days): ";
+        std::cin >> duration;
+        std::cout << "Enter room type (e.g., Single, Double): ";
+        std::cin >> roomType;
+
+        bool roomAvailable = false;
+        for (auto &booking : bookings)
         {
-            std::cout << "Enter check-in date (DD-MM-YYYY): ";
-            std::cin >> checkIn;
-
-            if (checkCheckIn(checkIn))
+            booking.isAvailable(hotelId, checkIn, duration, roomType);
+            if (booking.isAvailable(hotelId, checkIn, duration, roomType))
             {
-                validDate = true;
+                roomAvailable = true;
+                break;
+            }
+        }
+
+        if (roomAvailable)
+        {
+            std::cout << "Enter number of rooms: ";
+            std::cin >> numOfRoom;
+            std::string checkOut = DateUtils::calculateCheckOutDate(checkIn, duration);
+
+            int bookingId = bookings.size() + 1;
+            Booking newBooking(bookingId, hotelId, "Hotel Name", checkIn, checkOut); // Replace "Hotel Name" with actual hotel name
+            bookings.push_back(std::move(newBooking));
+
+            std::ofstream file("ID" + std::to_string(customerId) + "UserBooking.txt", std::ios::app);
+            if (file.is_open())
+            {
+                file << bookingId << "," << hotelId << "," << "hotel Name" << "," << checkIn << "," << checkOut << "\n"; // Replace "Hotel Name" with actual hotel name
+                file.close();
             }
             else
             {
-                std::cout << "Invalid date entered. Please try again." << std::endl;
+                std::cerr << "Unable to open file for writing: ID" << customerId << "UserBooking.txt" << std::endl;
             }
-        } while (!validDate);
-        splitdate(checkIn, day, month, year);
 
-        // user inputs duration and roomtype
-        std::cout << "Enter duration (in days): ";
-        std::cin >> duration;
-        std::cout << "Enter room type (e.g., 1bed, 2beds): ";
-        std::cin >> roomType;
-
-        // call isAvailble to show the number of available rooms
-        for (auto &booking : bookings)
-        {
-            booking.isAvalaible(hotelId, checkIn, duration, roomType); // Ensure this is called correctly
+            // Save to HotelBooking file
+            bookings.back().saveToHotelBookingFile(hotelId);
         }
-
-        std::cout << "Enter numbers of the rooms:";
-        std::cin >> numOfRoom;
-        std::string checkOut = calculateCheckOutDate(checkIn, duration);
-
-        // Create the new booking
-        bookings.emplace_back(checkIn, checkOut, duration, bookingId);  // Ensure this is done correctly
+        else
+        {
+            std::cout << "No rooms available for the selected dates and room type." << std::endl;
+        }
     }
 
 
     void cancelBooking(int bookingId)
     {
-        // ensure that bookings vector is empty
         bookings.clear();
-        // load booking info from file
         loadBookingsFromFile();
         bool found = false;
-        int hotelId;
 
-        for (int i = 0; i < bookings.size(); ++i)
+        for (size_t i = 0; i < bookings.size(); ++i)
         {
             if (bookings[i].getBookingId() == bookingId)
             {
                 found = true;
+                int hotelId = bookings[i].getHotelId();
                 bookings.erase(bookings.begin() + i);
-                std::cout << "Booking with ID " << bookingId << "has been canceled." << std::endl;
+                std::cout << "Booking with ID " << bookingId << " has been canceled." << std::endl;
 
-                std::ofstream file("ID" + to_string(customerId) + "UserBooking.txt");
+                std::ofstream file("ID" + std::to_string(customerId) + "UserBooking.txt");
                 if (!file.is_open())
                 {
                     std::cout << "Unable to open the file." << std::endl;
                     return;
                 }
-                for (auto &booking : bookings)
+                for (const auto &booking : bookings)
                 {
                     file << booking.getBookingId() << ","
-                         << booking.getHotelId()<< ","
-                         << booking.getHotelName()<< ","
+                         << booking.getHotelId() << ","
+                         << booking.getHotelName() << ","
                          << booking.getCheckIn() << ","
-                         << booking.getCheckOut() << "," << std::endl;
+                         << booking.getCheckOut() << "\n";
                 }
                 file.close();
 
                 std::ofstream hotelFile("ID" + std::to_string(hotelId) + "HotelBooking.txt");
-
-                if (!hotelFile)
+                if (!hotelFile.is_open())
                 {
-                    std::cout << "Unable opening hotel file." << std::endl;
+                    std::cout << "Unable to open hotel file." << std::endl;
                     return;
                 }
 
-                // Write the remaining bookings to the hotel file
-                for (auto &booking : bookings)
+                for (const auto &booking : bookings)
                 {
                     hotelFile << booking.getBookingId() << ","
-                              << booking.getHotelId()<< ","
-                              << booking.getHotelName()<< ","
+                              << booking.getHotelId() << ","
+                              << booking.getHotelName() << ","
                               << booking.getCheckIn() << ","
-                              << booking.getCheckOut() << std::endl;
+                              << booking.getCheckOut() << "\n";
                 }
-
-                // Close the hotel file
                 hotelFile.close();
                 return;
             }
@@ -253,7 +175,7 @@ public:
         }
     }
 
-    // display all current bookings
+    // Display all current bookings
     void displayCurrentBooking()
     {
         bookings.clear();
@@ -266,7 +188,7 @@ public:
         }
 
         std::cout << "Displaying all bookings: " << std::endl;
-        for (auto &booking : bookings)
+        for (const auto &booking : bookings)
         {
             std::cout << "Booking ID: " << booking.getBookingId() << std::endl
                       << "Hotel ID: " << booking.getHotelId() << std::endl
@@ -277,26 +199,11 @@ public:
         }
     }
 
-    int getCustomerId()
-    {
-        return this->customerId;
-    }
-    std::string getCustomerEmail()
-    {
-        return this->customerEmail;
-    }
-    std::string getCustomerName()
-    {
-        return this->customerName;
-    }
-    std::string getCustomerGender()
-    {
-        return this->gender;
-    }
-    std::string getCustomerPassword()
-    {
-        return this->customerPassword;
-    }
+    int getCustomerId() const { return customerId; }
+    std::string getCustomerEmail() const { return customerEmail; }
+    std::string getCustomerName() const { return customerName; }
+    std::string getCustomerGender() const { return gender; }
+    std::string getCustomerPassword() const { return customerPassword; }
 };
 
-#endif;
+#endif
