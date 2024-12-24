@@ -85,7 +85,7 @@ public:
         return true;
     }
 
-    void saveToHotelBookingFile(int hotelId)
+    void saveToHotelBookingFile(int hotelId,std::string roomType)
     {
         std::string filename = "ID" + std::to_string(hotelId) + "HotelBooking.txt";
         std::ofstream file(filename, std::ios::app);

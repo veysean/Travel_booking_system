@@ -111,7 +111,7 @@ public:
             }
 
             // Save to HotelBooking file
-            bookings.back().saveToHotelBookingFile(hotelId);
+            bookings.back().saveToHotelBookingFile(hotelId, roomType);
         }
         else
         {
