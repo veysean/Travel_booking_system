@@ -1,5 +1,5 @@
 # Travel_booking_system
-A modular C++ program for managing hotel operations, including room management, customer management, and booking processes. Designed for small-to-medium-sized hotels
+A modular C++ program for managing hotel operations, including room management, customer management, and booking processes. Designed for small-sized hotels
 ## Features
 - **Room Management**: check room availability.
 - **Customer Management**: Store and manage customer details.
@@ -20,7 +20,7 @@ Travel_booking_system |----|main.cpp
   
 ## Installation and Usage
 1. **Clone the Repository**
-   
+   https://github.com/veysean/Travel_booking_system.git
 
 ## How it works
 **1.Start the Program:** The program launches in a CLI environment.
